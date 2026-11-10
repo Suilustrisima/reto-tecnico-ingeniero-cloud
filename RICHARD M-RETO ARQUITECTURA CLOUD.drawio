@@ -1,0 +1,104 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Arquitectura AWS" id="0">
+    <mxGraphModel dx="1277" dy="700" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="1000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="vpc" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f9fc;strokeColor=#6c91ad;verticalAlign=top;fontStyle=1;fontColor=#173650;" value="VPC AWS · dos zonas de disponibilidad" vertex="1">
+          <mxGeometry height="380" width="940" x="80" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="cliente" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eaf3fb;strokeColor=#6c91ad;" value="Clientes / navegador" vertex="1">
+          <mxGeometry height="60" width="200" x="440" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="edge" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e2f3ee;strokeColor=#6c91ad;fontStyle=1;" value="Route 53 → CloudFront&#xa;AWS WAF · TLS / ACM" vertex="1">
+          <mxGeometry height="70" width="260" x="410" y="150" as="geometry" />
+        </mxCell>
+        <mxCell id="web" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff4df;strokeColor=#c99a48;" value="S3 privado&#xa;Frontend · OAC" vertex="1">
+          <mxGeometry height="65" width="220" x="100" y="270" as="geometry" />
+        </mxCell>
+        <mxCell id="alb" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff4df;strokeColor=#c99a48;" value="ALB público&#xa;HTTPS · origen restringido" vertex="1">
+          <mxGeometry height="65" width="220" x="430" y="270" as="geometry" />
+        </mxCell>
+        <mxCell id="imagenes" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff4df;strokeColor=#c99a48;" value="S3 privado&#xa;Imágenes · OAC" vertex="1">
+          <mxGeometry height="65" width="220" x="770" y="270" as="geometry" />
+        </mxCell>
+        <mxCell id="ecs1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eaf3fb;strokeColor=#6c91ad;" value="ECS Fargate · API&#xa;Subred privada · AZ A" vertex="1">
+          <mxGeometry height="70" width="240" x="170" y="430" as="geometry" />
+        </mxCell>
+        <mxCell id="ecs2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eaf3fb;strokeColor=#6c91ad;" value="ECS Fargate · API&#xa;Subred privada · AZ B" vertex="1">
+          <mxGeometry height="70" width="240" x="650" y="430" as="geometry" />
+        </mxCell>
+        <mxCell id="db1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f3edfa;strokeColor=#9675b4;" value="RDS PostgreSQL&#xa;Primaria · AZ A" vertex="1">
+          <mxGeometry height="70" width="240" x="170" y="570" as="geometry" />
+        </mxCell>
+        <mxCell id="db2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f3edfa;strokeColor=#9675b4;" value="RDS PostgreSQL&#xa;Standby · AZ B" vertex="1">
+          <mxGeometry height="70" width="240" x="650" y="570" as="geometry" />
+        </mxCell>
+        <mxCell id="ops" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#b0c4d3;fontSize=11;" value="Transversal: IAM · Secrets Manager · KMS · CloudWatch · CloudTrail · backups&lt;br&gt;Salida privada: NAT por AZ o endpoints VPC según dependencias" vertex="1">
+          <mxGeometry height="45" width="800" x="150" y="680" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" edge="1" parent="1" source="cliente" style="edgeStyle=orthogonalEdgeStyle;rounded=1;endArrow=block;html=1;" target="edge" value="HTTPS">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" edge="1" parent="1" source="edge" style="edgeStyle=orthogonalEdgeStyle;rounded=1;endArrow=block;html=1;" target="web" value="Frontend">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" edge="1" parent="1" source="edge" style="edgeStyle=orthogonalEdgeStyle;rounded=1;endArrow=block;html=1;fontSize=15;" target="alb" value="/api/*">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e4" edge="1" parent="1" source="edge" style="edgeStyle=orthogonalEdgeStyle;rounded=1;endArrow=block;html=1;" target="imagenes" value="Imágenes">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" edge="1" parent="1" source="cliente" style="edgeStyle=orthogonalEdgeStyle;rounded=1;dashed=1;endArrow=block;html=1;" target="imagenes" value="Carga con URL firmada">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" edge="1" parent="1" source="alb" style="edgeStyle=orthogonalEdgeStyle;rounded=1;endArrow=block;html=1;" target="ecs1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="340" y="302.5" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e7" edge="1" parent="1" source="alb" style="edgeStyle=orthogonalEdgeStyle;rounded=1;endArrow=block;html=1;" target="ecs2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e8" edge="1" parent="1" source="ecs1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;endArrow=block;html=1;" target="db1" value="TLS">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e9" edge="1" parent="1" source="ecs2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;endArrow=block;html=1;" target="db1" value="TLS">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="450" y="465" />
+              <mxPoint x="450" y="605" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e10" edge="1" parent="1" source="db1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;dashed=1;endArrow=block;html=1;" target="db2" value="Replicación Multi-AZ">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="WLeH7b6jsIjpxCWY38n1-1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="200" width="270" x="1120" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="WLeH7b6jsIjpxCWY38n1-2" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;rounded=0;fontSize=14;" value="&lt;span style=&quot;color: rgb(46, 64, 77); font-family: &amp;quot;Noto Sans&amp;quot;, -apple-system, BlinkMacSystemFont, &amp;quot;Segoe UI&amp;quot;, Roboto, Oxygen-Sans, Ubuntu, Cantarell, &amp;quot;Helvetica Neue&amp;quot;, sans-serif; background-color: rgb(255, 255, 255);&quot;&gt;El usuario accede al frontend mediante CloudFront. &lt;br&gt;Las solicitudes a la API se encaminan al balanceador y, desde allí, a las tareas del backend. &lt;br&gt;El backend consulta la base de datos privada y autoriza el acceso a los objetos cuando corresponde. S3 y RDS no se exponen públicamente.&lt;/span&gt;" vertex="1">
+          <mxGeometry height="160" width="250" x="1130" y="230" as="geometry" />
+        </mxCell>
+        <mxCell id="WLeH7b6jsIjpxCWY38n1-3" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" value="Cliente" vertex="1">
+          <mxGeometry height="50" width="30" x="340" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="WLeH7b6jsIjpxCWY38n1-4" parent="1" style="sketch=0;aspect=fixed;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;fillColor=#00188D;shape=mxgraph.azure.laptop" value="" vertex="1">
+          <mxGeometry height="30" width="50" x="370" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="WLeH7b6jsIjpxCWY38n1-7" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="140" width="270" x="1110" y="480" as="geometry" />
+        </mxCell>
+        <mxCell id="WLeH7b6jsIjpxCWY38n1-8" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=left;verticalAlign=top;rounded=0;fontSize=14;" value="&lt;span style=&quot;color: rgb(46, 64, 77); font-family: &amp;quot;Noto Sans&amp;quot;, -apple-system, BlinkMacSystemFont, &amp;quot;Segoe UI&amp;quot;, Roboto, Oxygen-Sans, Ubuntu, Cantarell, &amp;quot;Helvetica Neue&amp;quot;, sans-serif; background-color: rgb(255, 255, 255);&quot;&gt;La separación de capas facilita que el contenido estático, el backend y los datos se administren de forma independiente.&amp;nbsp;&lt;/span&gt;&lt;div&gt;&lt;span style=&quot;color: rgb(46, 64, 77); font-family: &amp;quot;Noto Sans&amp;quot;, -apple-system, BlinkMacSystemFont, &amp;quot;Segoe UI&amp;quot;, Roboto, Oxygen-Sans, Ubuntu, Cantarell, &amp;quot;Helvetica Neue&amp;quot;, sans-serif; background-color: rgb(255, 255, 255);&quot;&gt;La distribución en dos zonas reduce el impacto de la falla de una zona&lt;/span&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="115" width="250" x="1120" y="490" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
